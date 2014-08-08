@@ -1,0 +1,33 @@
+# built application files
+*.apk
+*.ap_
+ 
+# files for the dex VM
+*.dex
+ 
+# Java class files
+*.class
+ 
+# generated files
+bin/
+gen/
+build/
+ 
+# Android Studio
+.idea/
+.gradle
+local.properties
+/*/out
+*.iml
+*.iws
+*.ipr
+ 
+#configurations
+keystore.properties
+*.keystore
+ 
+#temporary files
+*~
+*.swp
+ 
+.DS_Store
