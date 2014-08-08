@@ -32,6 +32,8 @@ dependencies {
   compile 'javax.servlet:servlet-api:2.5'
   compile 'com.googlecode.objectify:objectify:4.0b3'
   compile 'com.ganyo:gcm-server:1.0.2'
+    compile 'org.apache.aries.application:twitter4j:0.3'
+
 }
 
 appengine {
