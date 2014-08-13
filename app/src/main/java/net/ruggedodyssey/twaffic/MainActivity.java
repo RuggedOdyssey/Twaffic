@@ -1,16 +1,16 @@
 package net.ruggedodyssey.twaffic;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
-
+import android.widget.TextView;
 
 
 public class MainActivity extends Activity {
@@ -19,12 +19,36 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("GCM_message_received"));
+
+
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new MainFragment())
                     .commit();
         }
+        new GcmRegistrationAsyncTask().execute(this);
     }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String message = intent.getStringExtra("message");
+            Log.d("receiver", "Got message: " + message);
+
+            //MainFragment fragment_obj = (MainFragment)getFragmentManager().findFragmentById(R.id.mainfragment);
+            Log.d("receiver", "Got message: more");
+            TextView textFragment = (TextView)findViewById(R.id.textview);
+            //((TextView) fragment_obj.getView().findViewById(R.id.textview)).setText(message);
+            //fragment_obj.setText(message);
+            textFragment.setText(message);
+
+        }
+    };
+
 
 
     @Override
@@ -46,19 +70,12 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
 
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
+    @Override
+    protected void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onDestroy();
     }
+
 }

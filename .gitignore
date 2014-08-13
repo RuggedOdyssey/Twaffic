@@ -31,3 +31,6 @@ keystore.properties
 *.swp
  
 .DS_Store
+
+#Twitter4J configuration file (includes API keys)
+twitter4j.properties
