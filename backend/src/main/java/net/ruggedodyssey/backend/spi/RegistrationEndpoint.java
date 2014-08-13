@@ -1,16 +1,18 @@
-package net.ruggedodyssey.backend;
+package net.ruggedodyssey.backend.spi;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 
+import net.ruggedodyssey.backend.domain.RegistrationRecord;
+
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.inject.Named;
 
-import static net.ruggedodyssey.backend.OfyService.ofy;
+import static net.ruggedodyssey.backend.service.OfyService.ofy;
 
 /**
  * A registration endpoint class we are exposing for a device's GCM registration id on the backend

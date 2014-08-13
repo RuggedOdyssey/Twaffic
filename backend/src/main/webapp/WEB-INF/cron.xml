@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cronentries>
+    <!--<cron>-->
+    <!--<url>/crons/check_feeds</url>-->
+    <!--<description>check if there is an event to notify</description>-->
+    <!--<schedule>every 1 mins</schedule>-->
+    <!--</cron>-->
+</cronentries>

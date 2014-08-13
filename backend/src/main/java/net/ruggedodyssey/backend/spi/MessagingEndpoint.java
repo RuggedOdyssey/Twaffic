@@ -1,4 +1,4 @@
-package net.ruggedodyssey.backend;
+package net.ruggedodyssey.backend.spi;
 
 import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
@@ -7,13 +7,15 @@ import com.google.android.gcm.server.Sender;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiNamespace;
 
+import net.ruggedodyssey.backend.domain.RegistrationRecord;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.inject.Named;
 
-import static net.ruggedodyssey.backend.OfyService.ofy;
+import static net.ruggedodyssey.backend.service.OfyService.ofy;
 
 /**
  * An endpoint to send messages to devices registered with the backend

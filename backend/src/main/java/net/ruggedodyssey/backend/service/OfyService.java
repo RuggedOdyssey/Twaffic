@@ -1,8 +1,10 @@
-package net.ruggedodyssey.backend;
+package net.ruggedodyssey.backend.service;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+
+import net.ruggedodyssey.backend.domain.RegistrationRecord;
 
 /**
  * Objectify service wrapper so we can statically register our persistence classes
