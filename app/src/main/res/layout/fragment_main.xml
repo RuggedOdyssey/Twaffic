@@ -15,4 +15,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tweet_me"
+        android:id="@+id/button"
+        android:layout_below="@+id/textview"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="110dp" />
+
 </RelativeLayout>
