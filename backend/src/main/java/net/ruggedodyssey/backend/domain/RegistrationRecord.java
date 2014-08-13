@@ -1,4 +1,4 @@
-package net.ruggedodyssey.backend;
+package net.ruggedodyssey.backend.domain;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;

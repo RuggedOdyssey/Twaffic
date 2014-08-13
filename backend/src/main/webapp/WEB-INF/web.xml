@@ -5,7 +5,8 @@
         <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
         <init-param>
             <param-name>services</param-name>
-            <param-value>net.ruggedodyssey.backend.RegistrationEndpoint, net.ruggedodyssey.backend.MessagingEndpoint</param-value>
+            <param-value>net.ruggedodyssey.backend.spi.RegistrationEndpoint,
+                net.ruggedodyssey.backend.spi.MessagingEndpoint</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
@@ -16,4 +17,20 @@
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
+
+    <servlet>
+        <servlet-name>CheckFeedsServlet</servlet-name>
+        <servlet-class>net.ruggedodyssey.backend.servlet.CheckFeedsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CheckFeedsServlet</servlet-name>
+        <url-pattern>/crons/check_feeds</url-pattern>
+    </servlet-mapping>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>crons</web-resource-name>
+            <url-pattern>/crons/check_feeds</url-pattern>
+        </web-resource-collection>
+        <auth-constraint><role-name>admin</role-name></auth-constraint>
+    </security-constraint>
 </web-app>

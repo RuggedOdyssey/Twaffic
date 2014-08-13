@@ -1,4 +1,4 @@
-package net.ruggedodyssey.twaffic;
+package net.ruggedodyssey.twaffic.notification;
 
 import android.app.IntentService;
 import android.content.Intent;

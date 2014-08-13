@@ -1,4 +1,6 @@
-package net.ruggedodyssey.backend;
+package net.ruggedodyssey.backend.service;
+
+import net.ruggedodyssey.backend.Constants;
 
 import java.util.List;
 
@@ -9,6 +11,9 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 
+/**
+ * Wrapper class to access the Twitter service through the twitter4j libraries.
+ */
 public class TwitterAPI {
 
     public TwitterAPI() {
@@ -24,10 +29,10 @@ public class TwitterAPI {
             //System.out.println("|START|");
             ConfigurationBuilder cb = new ConfigurationBuilder();
             cb.setDebugEnabled(true)
-                    .setOAuthConsumerKey("***")
-                    .setOAuthConsumerSecret("***")
-                    .setOAuthAccessToken("***")
-                    .setOAuthAccessTokenSecret("***");
+                    .setOAuthConsumerKey(Constants.oauth_consumerKey)
+                    .setOAuthConsumerSecret(Constants.oauth_consumerSecret)
+                    .setOAuthAccessToken(Constants.oauth_accessToken)
+                    .setOAuthAccessTokenSecret(Constants.oauth_accessTokenSecret);
             Twitter twitter = new TwitterFactory(cb.build()).getInstance();
             i = 2;
             List<Status> statuses = twitter.getUserTimeline(user);

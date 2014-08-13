@@ -1,4 +1,4 @@
-package net.ruggedodyssey.twaffic;
+package net.ruggedodyssey.twaffic.notification;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
 import net.ruggedodyssey.backend.registration.Registration;
+import net.ruggedodyssey.twaffic.BuildConfig;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -20,13 +21,13 @@ import java.util.logging.Logger;
 /**
  * Created by daneel on 2014/08/11.
  */
-class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
+public class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
     private Registration regService;
     private GoogleCloudMessaging gcm;
     private Context context;
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
-    private static final String SENDER_ID = "75453774850";
+    private static final String SENDER_ID = BuildConfig.GCM_SENDER_ID;
 
     public GcmRegistrationAsyncTask() {
 //        Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)

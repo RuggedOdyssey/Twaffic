@@ -12,7 +12,11 @@ android {
         versionName "1.0"
     }
     buildTypes {
+        debug {
+            buildConfigField 'String', 'GCM_SENDER_ID', $gcmSenderId
+        }
         release {
+            buildConfigField 'String', 'GCM_SENDER_ID', $gcmSenderId
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
