@@ -9,9 +9,6 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 
-/**
- * Created by daneel on 2014/08/11.
- */
 public class TwitterAPI {
 
     public TwitterAPI() {
@@ -27,10 +24,10 @@ public class TwitterAPI {
             //System.out.println("|START|");
             ConfigurationBuilder cb = new ConfigurationBuilder();
             cb.setDebugEnabled(true)
-                    .setOAuthConsumerKey("Ugu0UZX7byRaQXiLBm2dz6Tot")
-                    .setOAuthConsumerSecret("WeK0tLFizrI8TNQFRvO0BB8BHO3T3bJLQTQti36lHiMzRpIA4o")
-                    .setOAuthAccessToken("13935452-UhuwdRWSfIFqNzkL49P3mQklpbHVDAENlxVmGnEYF")
-                    .setOAuthAccessTokenSecret("8XDKIePcyUVyCaZS2kbjZvGYE49Z4frFJKuCOtDNRWENc");
+                    .setOAuthConsumerKey("***")
+                    .setOAuthConsumerSecret("***")
+                    .setOAuthAccessToken("***")
+                    .setOAuthAccessTokenSecret("***");
             Twitter twitter = new TwitterFactory(cb.build()).getInstance();
             i = 2;
             List<Status> statuses = twitter.getUserTimeline(user);
