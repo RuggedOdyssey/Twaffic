@@ -1,4 +1,4 @@
-package net.ruggedodyssey.twaffic;
+package net.ruggedodyssey.twaffic.ui;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -11,6 +11,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import net.ruggedodyssey.twaffic.R;
+import net.ruggedodyssey.twaffic.notification.GcmRegistrationAsyncTask;
 
 
 public class MainActivity extends Activity {

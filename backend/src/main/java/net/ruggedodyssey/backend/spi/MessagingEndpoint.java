@@ -8,6 +8,7 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiNamespace;
 
 import net.ruggedodyssey.backend.domain.RegistrationRecord;
+import net.ruggedodyssey.backend.service.TwitterAPI;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,4 +1,4 @@
-package net.ruggedodyssey.backend;
+package net.ruggedodyssey.backend.service;
 
 import java.util.List;
 
@@ -9,6 +9,9 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 
+/**
+ * Wrapper class to access the Twitter service through the twitter4j libraries.
+ */
 public class TwitterAPI {
 
     public TwitterAPI() {

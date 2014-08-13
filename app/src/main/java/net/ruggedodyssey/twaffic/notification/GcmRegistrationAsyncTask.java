@@ -1,4 +1,4 @@
-package net.ruggedodyssey.twaffic;
+package net.ruggedodyssey.twaffic.notification;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 /**
  * Created by daneel on 2014/08/11.
  */
-class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
+public class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
     private Registration regService;
     private GoogleCloudMessaging gcm;
     private Context context;
