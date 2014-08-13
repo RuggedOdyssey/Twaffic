@@ -5,6 +5,7 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import com.google.api.server.spi.config.Api;
+import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 
 import net.ruggedodyssey.backend.domain.RegistrationRecord;
@@ -40,6 +41,8 @@ public class MessagingEndpoint {
      *
      * @param message The message to send
      */
+
+    @ApiMethod(name = "sendMessage")
     public void sendMessage(@Named("message") String message) throws IOException {
         if(message == null || message.trim().length() == 0) {
             log.warning("Not sending message because it is empty");
@@ -77,6 +80,11 @@ public class MessagingEndpoint {
         }
     }
 
+    /**
+     * Test call to send a dummy message.
+     * @throws IOException
+     */
+    @ApiMethod(name = "sendTestTweet")
     public void sendTestTweet() throws IOException {
 
         String message = TwitterAPI.getTestTweet();
