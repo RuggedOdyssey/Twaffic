@@ -1,5 +1,8 @@
 package net.ruggedodyssey.backend.servlet;
 
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -42,7 +45,7 @@ public class CheckFeedsServlet extends HttpServlet {
 //
 //            // TODO
 //            // Get the Memcache Service
-//            MemcacheService memcacheService = MemcacheServiceFactory.getMemcacheService();
+            MemcacheService memcacheService = MemcacheServiceFactory.getMemcacheService();
 //
 //
 //            // TODO
