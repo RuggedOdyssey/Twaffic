@@ -36,9 +36,9 @@ public class GcmIntentService extends IntentService {
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 Logger.getLogger("GCM_RECEIVED").log(Level.INFO, extras.toString());
 
-                showToast(extras.getString("message"));
-                Log.d("sender", extras.getString("message"));
-                sendMessage(extras.getString("message"));
+                //showToast(extras.getString("message"));
+                //Log.d("sender", extras.getString("message"));
+                sendMessage(extras.getString("message"), extras.getString("url"));
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);
@@ -53,11 +53,12 @@ public class GcmIntentService extends IntentService {
         });
     }
 
-    private void sendMessage(final String message) {
+    private void sendMessage(final String message, String url) {
         Log.d("sender", "Broadcasting message 1");
         Intent intent = new Intent("GCM_message_received");
         // You can also include some extra data.
         intent.putExtra("message", message);
+        intent.putExtra("url", url);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

@@ -18,15 +18,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver
             android:name=".notification.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="net.ruggedodyssey.twaffic.app" />
             </intent-filter>
         </receiver>
+
         <service android:name=".notification.GcmIntentService" />
+
+        <activity
+            android:name=".ui.DetailActivity"
+            android:label="@string/title_activity_detail"
+            android:parentActivityName=".ui.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="net.ruggedodyssey.twaffic.ui.MainActivity" />
+        </activity>
     </application>
 
     <permission

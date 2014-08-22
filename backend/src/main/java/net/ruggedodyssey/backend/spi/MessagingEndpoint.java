@@ -53,7 +53,7 @@ public class MessagingEndpoint {
             message = message.substring(0, 1000) + "[...]";
         }
         Sender sender = new Sender(API_KEY);
-        Message msg = new Message.Builder().addData("message", message).build();
+        Message msg = new Message.Builder().collapseKey("Traffic Update").addData("message", message).build();
         List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).limit(10).list();
         for(RegistrationRecord record : records) {
             Result result = sender.send(msg, record.getRegId(), 5);
@@ -88,6 +88,8 @@ public class MessagingEndpoint {
     public void sendTestTweet() throws IOException {
 
         String message = TwitterAPI.getTestTweet();
+        String url = TwitterAPI.getTweetURL();
+        //url = "http://i.imgur.com/eEdPn04.jpg";
         if(message == null || message.trim().length() == 0) {
             log.warning("Not sending message because it is empty");
             return;
@@ -98,7 +100,14 @@ public class MessagingEndpoint {
             message = message.substring(0, 1000) + "[...]";
         }
         Sender sender = new Sender(API_KEY);
-        Message msg = new Message.Builder().addData("message", message).build();
+        Message msg = new Message.Builder()
+                .collapseKey("Traffic Update")
+                .addData("url", url)
+                .addData("message", message)
+                .build();
+
+
+
         List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).limit(10).list();
         for(RegistrationRecord record : records) {
             Result result = sender.send(msg, record.getRegId(), 5);
