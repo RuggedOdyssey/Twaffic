@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">Twaffic</string>
-    <string name="app_id">0</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="tweet_me">Tweet me!</string>
