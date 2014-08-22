@@ -154,7 +154,7 @@ public class MainActivity extends Activity {
         PendingIntent pMainIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         try {
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.jeep256small);
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.jeep256);
             // Build notification
             Notification notification = new Notification.Builder(this)
                     .setContentTitle(headline)
