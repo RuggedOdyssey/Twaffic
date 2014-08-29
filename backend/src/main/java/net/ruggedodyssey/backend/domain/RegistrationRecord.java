@@ -11,6 +11,10 @@ public class RegistrationRecord {
     @Id
     Long id;
 
+    //TODO don't use implicit keys, use the g+ userId
+//    @Id
+//    String userId;
+
     @Index
     private String regId;
     // you can add more fields...
