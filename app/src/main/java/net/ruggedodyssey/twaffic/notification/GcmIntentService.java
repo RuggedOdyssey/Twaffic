@@ -1,7 +1,12 @@
 package net.ruggedodyssey.twaffic.notification;
 
 import android.app.IntentService;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,6 +16,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import net.ruggedodyssey.twaffic.data.TwafficUpdateContract.TweetEntry;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,8 +29,12 @@ import java.util.logging.Logger;
  */
 public class GcmIntentService extends IntentService {
 
+    private final Context mContext;
+    public static final String DATE_FORMAT = "EEE, d MMM HH:mm";
+
     public GcmIntentService() {
         super("GcmIntentService");
+        mContext = this;
     }
 
     @Override
@@ -38,7 +52,7 @@ public class GcmIntentService extends IntentService {
 
                 //showToast(extras.getString("message"));
                 //Log.d("sender", extras.getString("message"));
-                sendMessage(extras.getString("message"), extras.getString("url"));
+                sendMessage(extras.getString("id"), extras.getString("message"), extras.getString("url"), extras.getString("date"));
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);
@@ -53,12 +67,70 @@ public class GcmIntentService extends IntentService {
         });
     }
 
-    private void sendMessage(final String message, String url) {
+    public static String getFormattedDateString(Date date){
+        // Because the API returns a unix timestamp (measured in seconds),
+        // it must be converted to milliseconds in order to be converted to valid date.
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        return sdf.format(date);
+    }
+
+    /**
+     * Converts a dateText to a long Unix time representation
+     * @param dateText the input date string
+     * @return the Date object
+     */
+    public static Date getDateFromString(String dateText) {
+        SimpleDateFormat dbDateFormat = new SimpleDateFormat(DATE_FORMAT);
+        try {
+            return dbDateFormat.parse(dateText);
+        } catch ( ParseException e ) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    private void sendMessage(String id, final String message, String url, String date) {
+//        Date tweetDate  = getDateFromString(date);
+//        date = getFormattedDateString(tweetDate);
+
         Log.d("sender", "Broadcasting message 1");
+        long tweetId = Long.valueOf(id);
+
+        addTweet(tweetId, message, date, url, null);
+
         Intent intent = new Intent("GCM_message_received");
         // You can also include some extra data.
         intent.putExtra("message", message);
         intent.putExtra("url", url);
+        intent.putExtra("id", id);
+        intent.putExtra("date", date);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private long addTweet(long ID, String text, String date, String url, String keywords) {
+
+        // First, check if the location with this city name exists in the db
+        Cursor cursor = mContext.getContentResolver().query(
+                TweetEntry.CONTENT_URI,
+                new String[]{TweetEntry._ID},
+                TweetEntry.COLUMN_TWEET_Id+ " = ?",
+                new String[]{String.valueOf(ID)},
+                null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int tweetIndex = cursor.getColumnIndex(TweetEntry._ID);
+            return cursor.getLong(tweetIndex);
+        } else {
+            ContentValues tweetValues = new ContentValues();
+            tweetValues.put(TweetEntry.COLUMN_TWEET_Id, ID);
+            tweetValues.put(TweetEntry.COLUMN_TWEET_Date, date);
+            tweetValues.put(TweetEntry.COLUMN_TWEET_Text, text);
+            tweetValues.put(TweetEntry.COLUMN_TWEET_Url, url);
+            tweetValues.put(TweetEntry.COLUMN_TWEET_Keywords, keywords);
+
+            Uri TweetInsertUri = mContext.getContentResolver()
+                    .insert(TweetEntry.CONTENT_URI, tweetValues);
+
+            return ContentUris.parseId(TweetInsertUri);
+        }
     }
 }

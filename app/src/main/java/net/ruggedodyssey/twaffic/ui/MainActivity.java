@@ -143,33 +143,33 @@ public class MainActivity extends Activity {
         bundle.putString("tweet", contentText);
         bundle.putString("tweetUrl", url);
 
-        Intent intent = new Intent(this, DetailActivity.class)
+        Intent resultIntent = new Intent(this, DetailActivity.class)
                 .putExtra(Intent.EXTRA_TEXT, bundle);
 
-        intent.setAction("android.intent.action.VIEW)");
-
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addNextIntent(intent);
+        stackBuilder.addParentStack(DetailActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
 
-        PendingIntent pMainIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         try {
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.jeep256);
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_stat_jeep256);
             // Build notification
             Notification notification = new Notification.Builder(this)
                     .setContentTitle(headline)
                             //TODO: Refer to http://developer.android.com/guide/topics/ui/notifiers/notifications.html#HandlingNotifications
-                    .setContentText(contentText + "\n" + url)
+                    .setContentText(contentText)
                             //.setContentInfo(contentText)
                     .setTicker(headline)  //This creates ticker text on every notification refresh, so not using it anymore.
-                    .setContentIntent(pMainIntent)
-                    .setSmallIcon(R.drawable.jeep24)
+                    .setContentIntent(resultPendingIntent)
+                    .setSmallIcon(R.drawable.ic_stat_jeep256)
                     .setLargeIcon(bm)
+                    .setStyle(new Notification.BigTextStyle().bigText(contentText))
                     .setWhen(System.currentTimeMillis())
                     .build();
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             // Hide the notification after its selected
-            //notification.flags |= Notification.FLAG_AUTO_CANCEL;
+            notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
             notificationManager.notify(0, notification);
         }
