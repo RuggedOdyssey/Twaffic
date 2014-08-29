@@ -89,7 +89,9 @@ public class MessagingEndpoint {
 
         String message = TwitterAPI.getTestTweet();
         String url = TwitterAPI.getTweetURL();
-        //url = "http://i.imgur.com/eEdPn04.jpg";
+        long tweetid = TwitterAPI.getTweetID();
+        String tweetDate = TwitterAPI.getTweetDate();
+
         if(message == null || message.trim().length() == 0) {
             log.warning("Not sending message because it is empty");
             return;
@@ -104,9 +106,9 @@ public class MessagingEndpoint {
                 .collapseKey("Traffic Update")
                 .addData("url", url)
                 .addData("message", message)
+                .addData("id", String.valueOf(tweetid))
+                .addData("date", tweetDate)
                 .build();
-
-
 
         List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).limit(10).list();
         for(RegistrationRecord record : records) {

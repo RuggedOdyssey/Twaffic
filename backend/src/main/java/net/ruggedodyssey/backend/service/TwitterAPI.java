@@ -29,6 +29,7 @@ public class TwitterAPI {
         return (int)(Math.random() * range) + min;
     }
 
+
     public static String getTestTweet() {
         String tweettext = "";
         try {
@@ -54,6 +55,10 @@ public class TwitterAPI {
         return tweettext;
     }
 
+    public static long getTweetID(){
+        return tweet.getId();
+    }
+
     public static String getTweetURL(){
         String url = "";
         if (tweet != null && tweet.getMediaEntities().length > 0){
@@ -66,4 +71,7 @@ public class TwitterAPI {
         return url;
     }
 
+    public static String getTweetDate() {
+        return tweet.getCreatedAt().toString();
+    }
 }
