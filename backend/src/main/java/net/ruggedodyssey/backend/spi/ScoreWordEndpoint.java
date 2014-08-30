@@ -42,6 +42,7 @@ public class ScoreWordEndpoint {
         if(record == null) {
             record = new ScoreWord();
         }
+        record.setWord(word);
         record.setScore(score);
         ofy().save().entity(record).now();
     }
