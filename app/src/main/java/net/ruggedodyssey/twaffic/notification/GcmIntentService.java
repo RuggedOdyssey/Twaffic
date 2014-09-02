@@ -8,11 +8,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -21,6 +18,7 @@ import net.ruggedodyssey.twaffic.data.TwafficUpdateContract.TweetEntry;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +28,7 @@ import java.util.logging.Logger;
 public class GcmIntentService extends IntentService {
 
     private final Context mContext;
-    public static final String DATE_FORMAT = "EEE, d MMM HH:mm";
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -50,59 +48,40 @@ public class GcmIntentService extends IntentService {
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 Logger.getLogger("GCM_RECEIVED").log(Level.INFO, extras.toString());
 
-                //showToast(extras.getString("message"));
-                //Log.d("sender", extras.getString("message"));
                 sendMessage(extras.getString("id"), extras.getString("message"), extras.getString("url"), extras.getString("date"));
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    protected void showToast(final String message) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    public static String getFormattedDateString(Date date){
-        // Because the API returns a unix timestamp (measured in seconds),
-        // it must be converted to milliseconds in order to be converted to valid date.
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        return sdf.format(date);
-    }
-
-    /**
-     * Converts a dateText to a long Unix time representation
-     * @param dateText the input date string
-     * @return the Date object
-     */
-    public static Date getDateFromString(String dateText) {
-        SimpleDateFormat dbDateFormat = new SimpleDateFormat(DATE_FORMAT);
+    public static String getDbDateFromString(String date){
         try {
-            return dbDateFormat.parse(dateText);
-        } catch ( ParseException e ) {
-            e.printStackTrace();
-            return null;
+            Locale dateLocale = Locale.getDefault();
+            SimpleDateFormat inFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", dateLocale);
+            Date returnDate = inFormat.parse(date);
+            SimpleDateFormat outFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", dateLocale);
+            return outFormat.format(returnDate);
         }
+        catch (ParseException e) {
+                Log.d("receiver", "Error converting date");
+        }
+        return "";
     }
+
     private void sendMessage(String id, final String message, String url, String date) {
-//        Date tweetDate  = getDateFromString(date);
-//        date = getFormattedDateString(tweetDate);
+        String formattedDate = getDbDateFromString(date);
 
         Log.d("sender", "Broadcasting message 1");
         long tweetId = Long.valueOf(id);
 
-        addTweet(tweetId, message, date, url, null);
+        addTweet(tweetId, message, formattedDate, url, null);
 
         Intent intent = new Intent("GCM_message_received");
         // You can also include some extra data.
         intent.putExtra("message", message);
         intent.putExtra("url", url);
         intent.putExtra("id", id);
-        intent.putExtra("date", date);
+        intent.putExtra("date", formattedDate);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 

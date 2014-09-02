@@ -75,7 +75,6 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
 
     @Override
     protected void onPostExecute(String msg) {
-        //Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
         sendMessage(msg);
         Logger.getLogger("REGISTRATION").log(Level.INFO, msg);
     }
