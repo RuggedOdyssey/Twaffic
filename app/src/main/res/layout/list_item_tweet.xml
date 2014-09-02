@@ -4,23 +4,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--<net.ruggedodyssey.twaffic.ui.AspectRatioImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:id="@+id/list_item_tweet_image"-->
+        <!--android:paddingTop="16dp"-->
+        <!--android:paddingBottom="16dp"/>-->
+
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="right"
-    android:id="@+id/list_item_tweet_date"
-        android:text="Date Here" />
+    android:id="@+id/list_item_tweet_date"/>
+
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:id="@+id/list_item_tweet_text" />
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:id="@+id/list_item_tweet_url"
-        android:text="url here" />
+
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

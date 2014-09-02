@@ -1,4 +1,1 @@
-This is an exploratory project, there will be more. Twitter, traffic push notifictions and android app.
-Daneel Stuff
-More stuff.
-And more
+This is an exploratory project, there will be more. Twitter, traffic push notifictions via GCM and android app.

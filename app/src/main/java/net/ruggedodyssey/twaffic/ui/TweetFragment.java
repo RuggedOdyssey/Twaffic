@@ -3,6 +3,7 @@ package net.ruggedodyssey.twaffic.ui;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,11 +11,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import net.ruggedodyssey.twaffic.R;
 import net.ruggedodyssey.twaffic.data.TwafficUpdateContract.TweetEntry;
+import net.ruggedodyssey.twaffic.spi.TweetAdapter;
 
 /**
  * Created by daneel on 2014/08/12.
@@ -25,7 +27,8 @@ import net.ruggedodyssey.twaffic.data.TwafficUpdateContract.TweetEntry;
 public class TweetFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int TWEET_LOADER = 0;
-    private SimpleCursorAdapter mTweetAdapter;
+    //private SimpleCursorAdapter mTweetAdapter;
+    private TweetAdapter mTweetAdapter;
     View rootView;
 
     private static final String[] TWEET_COLUMNS = {
@@ -49,54 +52,23 @@ public class TweetFragment extends Fragment implements LoaderManager.LoaderCallb
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mTweetAdapter = new SimpleCursorAdapter(
-                getActivity(),
-                R.layout.list_item_tweet,
-                null,
-                // the column names to use to fill the textviews
-                new String[]{TweetEntry.COLUMN_TWEET_Date,
-                        TweetEntry.COLUMN_TWEET_Text,
-                        TweetEntry.COLUMN_TWEET_Url,
-                        TweetEntry.COLUMN_TWEET_Keywords
-                },
-                // the textviews to fill with the data pulled from the columns above
-                new int[]{R.id.list_item_tweet_date,
-                        R.id.list_item_tweet_text,
-                        R.id.list_item_tweet_keywords,
-                        R.id.list_item_tweet_url
-                },
-                0
-        );
+        mTweetAdapter = new TweetAdapter(getActivity(), null, 0);
 
-//        mTweetAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-//            @Override
-//            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-//                switch (columnIndex) {
-//                    case COL_TWEET_DATE_:
-//                    case COL_TWEET_TEXT_:
-//                    case COL_TWEET_URL_:
-//                }
-//                return false;
-//            }
-//        });
-
-        rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_tweet);
         listView.setAdapter(mTweetAdapter);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                Cursor cursor = mTweetAdapter.getCursor();
-//                if (cursor != null && cursor.moveToPosition(position)){
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("tweet", cursor.getString(COL_TWEET_TEXT_));
-//                    bundle.putString("tweetUrl", cursor.getString(COL_TWEET_URL_));
-//                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-//                            .putExtra(Intent.EXTRA_TEXT, bundle);
-//                }
-//            }
-//        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Cursor cursor = mTweetAdapter.getCursor();
+                if (cursor != null && cursor.moveToPosition(position)){
+                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+                            .putExtra(DetailActivity.TWEET_KEY, cursor.getString(COL_TWEET_ID));
+                    startActivity(intent);
+                }
+            }
+        });
 
         return rootView;
     }

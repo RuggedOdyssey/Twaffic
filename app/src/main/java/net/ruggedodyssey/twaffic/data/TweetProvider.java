@@ -19,8 +19,9 @@ public class TweetProvider extends ContentProvider {
     private TwafficUpdateDbHelper mOpenHelper;
 
     private static final int TWEET_ID = 100;
-    private static final int TWEET = 101;
+    private static final int TWEETS = 101;
     private static final int TWEET_WITH_DATE = 102;
+
 
     private static final SQLiteQueryBuilder sTweetQueryBuilder;
 
@@ -32,6 +33,23 @@ public class TweetProvider extends ContentProvider {
     private static final String sTweetSelection =
             TwafficUpdateContract.TweetEntry.TABLE_NAME +
                     "." + TwafficUpdateContract.TweetEntry.COLUMN_TWEET_Date + " = ?";
+
+    private static final String sTweetSelectionById =
+            TwafficUpdateContract.TweetEntry.TABLE_NAME +
+                    "." + TwafficUpdateContract.TweetEntry.COLUMN_TWEET_Id + " = ?";
+
+    private Cursor getTweetById(Uri uri, String[] projection, String sortOrder) {
+        long id = TwafficUpdateContract.TweetEntry.getTweetIdFromUri(uri);
+
+        return sTweetQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sTweetSelectionById,
+                new String[]{String.valueOf(id)},
+                null,
+                null,
+                sortOrder
+        );
+    }
 
     private Cursor getTweets(Uri uri, String[] projection, String sortOrder) {
         String[] selectionArgs = null;
@@ -53,8 +71,8 @@ public class TweetProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = TwafficUpdateContract.CONTENT_AUTHORITY;
 
-        matcher.addURI(authority, TwafficUpdateContract.PATH_TWEETS, TWEET);
-        matcher.addURI(authority, TwafficUpdateContract.PATH_TWEETS + "/*", TWEET_WITH_DATE);
+        matcher.addURI(authority, TwafficUpdateContract.PATH_TWEETS, TWEETS);
+        matcher.addURI(authority, TwafficUpdateContract.PATH_TWEETS + "/*", TWEET_ID);
 
         return matcher;
     }
@@ -70,13 +88,13 @@ public class TweetProvider extends ContentProvider {
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
             // "tweets/*"
-            case TWEET_WITH_DATE:
+            case TWEET_ID:
             {
-                retCursor = null;
+                retCursor = getTweetById(uri, projection, sortOrder);
                 break;
             }
             // "tweets"
-            case TWEET:{
+            case TWEETS:{
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         TwafficUpdateContract.TweetEntry.TABLE_NAME,
                         projection,
@@ -84,7 +102,7 @@ public class TweetProvider extends ContentProvider {
                         selectionArgs,
                         null,
                         null,
-                        sortOrder
+                        TwafficUpdateContract.TweetEntry.COLUMN_TWEET_Date + " DESC"
                 );
                 break;
             }
@@ -103,7 +121,7 @@ public class TweetProvider extends ContentProvider {
         switch (match){
             case TWEET_WITH_DATE:
                 return TwafficUpdateContract.TweetEntry.CONTENT_TYPE;
-            case TWEET:
+            case TWEETS:
                 return TwafficUpdateContract.TweetEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -117,7 +135,7 @@ public class TweetProvider extends ContentProvider {
         Uri returnUri;
 
         switch (match) {
-            case TWEET: {
+            case TWEETS: {
                 long _id = db.insert(TwafficUpdateContract.TweetEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
                     returnUri = TwafficUpdateContract.TweetEntry.buildTweetUri(_id);
@@ -138,7 +156,7 @@ public class TweetProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
         switch (match) {
-            case TWEET:
+            case TWEETS:
                 rowsDeleted = db.delete(
                         TwafficUpdateContract.TweetEntry.TABLE_NAME, selection, selectionArgs);
                 break;
@@ -159,7 +177,7 @@ public class TweetProvider extends ContentProvider {
             int rowsUpdated;
 
             switch (match) {
-                case TWEET:
+                case TWEETS:
                     rowsUpdated = db.update(TwafficUpdateContract.TweetEntry.TABLE_NAME, values, selection,
                             selectionArgs);
                     break;
