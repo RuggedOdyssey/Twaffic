@@ -17,21 +17,31 @@ package net.ruggedodyssey.twaffic.ui;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import net.ruggedodyssey.twaffic.R;
+import net.ruggedodyssey.twaffic.data.TwafficUpdateContract.TweetEntry;
 
 
 public class DetailActivity extends Activity {
+
+    public static final String TWEET_KEY = "tweet_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +77,35 @@ public class DetailActivity extends Activity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class DetailFragment extends Fragment {
+    public static class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+        public static final String TWEET_KEY = "tweet_id";
+        private long mTweetId;
+        private static final int DETAIL_LOADER = 0;
+
+        private static final String[] TWEET_COLUMNS = {
+                TweetEntry.TABLE_NAME + "." + TweetEntry._ID,
+                TweetEntry.COLUMN_TWEET_Date,
+                TweetEntry.COLUMN_TWEET_Text,
+                TweetEntry.COLUMN_TWEET_Url,
+                TweetEntry.COLUMN_TWEET_Keywords
+        };
 
         public DetailFragment() {
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            outState.putString(TWEET_KEY, String.valueOf(mTweetId));
+            super.onSaveInstanceState(outState);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            if (mTweetId != 0) {
+                getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+            }
         }
 
         @Override
@@ -77,22 +113,65 @@ public class DetailActivity extends Activity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-            // The detail Activity called via intent.  Inspect the intent for forecast data.
-            Intent intent = getActivity().getIntent();
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-                Bundle bundle = intent.getExtras().getBundle(Intent.EXTRA_TEXT);
-                String tweetText = bundle.getString("tweet");
-                ((TextView) rootView.findViewById(R.id.detail_text))
-                        .setText(tweetText);
-                String tweetUrl = bundle.getString("tweetUrl");
-                if (tweetUrl != null) {
-                    ((TextView) rootView.findViewById(R.id.detail_url))
-                            .setText(tweetUrl);
-                    AspectRatioImageView tweetImage = (AspectRatioImageView)rootView.findViewById(R.id.tweetImage);
-                    Picasso.with(getActivity()).load(tweetUrl).into(tweetImage);
-                }
-            }
             return rootView;
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            getLoaderManager().initLoader(DETAIL_LOADER, null, this);
+            if (savedInstanceState != null) {
+                mTweetId = Long.valueOf(savedInstanceState.getString(TWEET_KEY));
+            }
+            super.onActivityCreated(savedInstanceState);
+        }
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+            Intent intent = getActivity().getIntent();
+            if (intent == null || !intent.hasExtra(TWEET_KEY)) {
+                return null;
+            }
+            long mTweetId = Long.valueOf(intent.getStringExtra(TWEET_KEY));
+
+            // Sort order:  Ascending, by date.
+            String sortOrder = TweetEntry.COLUMN_TWEET_Date+ " DESC";
+
+            Uri TweetUri = TweetEntry.buildTweetUriWithId(mTweetId);
+
+            // Now create and return a CursorLoader that will take care of
+            // creating a Cursor for the data being displayed.
+            return new CursorLoader(
+                    getActivity(),
+                    TweetUri,
+                    TWEET_COLUMNS,
+                    null,
+                    null,
+                    sortOrder
+            );
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor data) {
+            if (!data.moveToFirst()) { return; }
+
+            String dateString = data.getString(data.getColumnIndex(TweetEntry.COLUMN_TWEET_Date));
+            ((TextView) getView().findViewById(R.id.detail_date))
+                    .setText(dateString);
+
+            String tweetString = data.getString(data.getColumnIndex(TweetEntry.COLUMN_TWEET_Text));
+            TextView tweetTextView = (TextView)getView().findViewById(R.id.detail_text);
+            tweetTextView.setText(tweetString);
+            Linkify.addLinks(tweetTextView, Linkify.ALL);
+
+            String tweetUrl = data.getString(data.getColumnIndex(TweetEntry.COLUMN_TWEET_Url));
+            ImageView tweetImage = (ImageView) getView().findViewById(R.id.detail_tweet_Image);
+            Picasso.with(getActivity()).load(tweetUrl).into(tweetImage);
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> cursorLoader) {
+
         }
     }
 }

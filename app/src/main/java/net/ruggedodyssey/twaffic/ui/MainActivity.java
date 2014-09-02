@@ -122,29 +122,27 @@ public class MainActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            String message;
-            message = intent.getStringExtra("message");
-            String url = intent.getStringExtra("url");
-            Log.d("receiver", "Got message: " + message);
+            //if (intent.hasExtra("message") && intent.hasExtra("id")) {
+                String message;
+                message = intent.getStringExtra("message");
+                String url = intent.getStringExtra("url");
+                long id = Long.valueOf(intent.getStringExtra("id")==null?"0":intent.getStringExtra("id"));
+                Log.d("receiver", "Got message: " + message);
 
-            //MainFragment fragment_obj = (MainFragment)getFragmentManager().findFragmentById(R.id.mainfragment);
-            Log.d("receiver", "Got message: more");
+                //MainFragment fragment_obj = (MainFragment)getFragmentManager().findFragmentById(R.id.mainfragment);
+                Log.d("receiver", "Got message: more");
 
-            createNotification("Traffic Update", message, url);
-
+                createNotification("Traffic Update", message, url, id);
+            //}
 
         }
     };
 
 
-    public void createNotification(String headline, String contentText, String url) {
-
-        Bundle bundle = new Bundle();
-        bundle.putString("tweet", contentText);
-        bundle.putString("tweetUrl", url);
+    public void createNotification(String headline, String contentText, String url, long id) {
 
         Intent resultIntent = new Intent(this, DetailActivity.class)
-                .putExtra(Intent.EXTRA_TEXT, bundle);
+                .putExtra(DetailActivity.TWEET_KEY, String.valueOf(id));
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(DetailActivity.class);
