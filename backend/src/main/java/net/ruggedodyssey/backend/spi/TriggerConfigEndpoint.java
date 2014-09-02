@@ -4,8 +4,10 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
+import com.google.appengine.api.users.User;
 
 import net.ruggedodyssey.backend.domain.TimeRoute;
+import net.ruggedodyssey.backend.form.TimeRouteConfigForm;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -33,46 +35,46 @@ public class TriggerConfigEndpoint {
      * Register a device to the backend
      *
      */
-    @ApiMethod(name = "add")
-    public void add(@Named("userId") String userId, @Named("regId") String name) {
-        if(findRecord(userId, name) != null) {
-            log.info("Trigger " + userId + "with name " + name + " already registered, skipping register");
-            return;
-        }
-        TimeRoute record = new TimeRoute();
-        ofy().save().entity(record).now();
+    @ApiMethod(name = "add", httpMethod = ApiMethod.HttpMethod.POST)
+    public void add(final User user, TimeRouteConfigForm configForm) {
+//        if(findRecord(userId, name) != null) {
+//            log.info("Trigger " + userId + "with name " + name + " already registered, skipping register");
+//            return;
+//        }
+//        TimeRoute record = new TimeRoute();
+//        ofy().save().entity(record).now();
     }
 
     /**
      * delete a trigger
-     * @param userId
      * @param name
      */
-    @ApiMethod(name = "delete")
-    public void delete(@Named("userId") String userId, @Named("regId") String name) {
-        TimeRoute record = findRecord(userId, name);
-        if(record == null) {
-            log.info("Trigger " + userId + "with name " + name + " not registered, skipping unregister");
-            return;
-        }
-        ofy().delete().entity(record).now();
+    @ApiMethod(name = "delete", httpMethod = ApiMethod.HttpMethod.POST)
+    public void delete(final User user, @Named("regId") String name) {
+//        TimeRoute record = findRecord(userId, name);
+//        if(record == null) {
+//            log.info("Trigger " + userId + "with name " + name + " not registered, skipping unregister");
+//            return;
+//        }
+//        ofy().delete().entity(record).now();
     }
 
     /**
      * Return a collection of registered devices
      *
      * @param count The number of devices to list
-     * @return a list of Google Cloud Messaging registration Ids
+     * @return a list of time route configs for a user
      */
     @ApiMethod(name = "list")
-    public CollectionResponse<TimeRoute> listDevices(@Named("count") int count) {
+    public CollectionResponse<TimeRoute> listDevices(final User user, @Named("count") int count) {
         List<TimeRoute> records = ofy().load().type(TimeRoute.class).limit(count).list();
         return CollectionResponse.<TimeRoute>builder().setItems(records).build();
     }
 
 //TODO is this right? How do we identify a timeroute from the user point of view? UserId and nameString
-    private TimeRoute findRecord(String userId, String nameSTring) {
-        return ofy().load().type(TimeRoute.class).filter("userId", userId).first().now();
+    private TimeRoute findRecord(final User user,  String nameSTring) {
+//        return ofy().load().type(TimeRoute.class).filter("userId", userId).first().now();
+        return null;
     }
 
 }
