@@ -5,6 +5,7 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.users.User;
+import com.googlecode.objectify.cmd.Query;
 
 import net.ruggedodyssey.backend.domain.TimeRoute;
 import net.ruggedodyssey.backend.form.TimeRouteConfigForm;
@@ -32,49 +33,78 @@ public class TriggerConfigEndpoint {
     private static final Logger log = Logger.getLogger(TriggerConfigEndpoint.class.getName());
 
     /**
-     * Register a device to the backend
+     * Add a trigger to the backend
      *
      */
     @ApiMethod(name = "add", httpMethod = ApiMethod.HttpMethod.POST)
     public void add(final User user, TimeRouteConfigForm configForm) {
-//        if(findRecord(userId, name) != null) {
-//            log.info("Trigger " + userId + "with name " + name + " already registered, skipping register");
-//            return;
-//        }
-//        TimeRoute record = new TimeRoute();
-//        ofy().save().entity(record).now();
+        TimeRoute record = findRecord(user, configForm.getRouteName()).get(0);
+        if(record == null) {
+            record = new TimeRoute();
+        }
+        record.setFieldsFromForm(user.getUserId(), configForm);
+        ofy().save().entity(record).now();
     }
 
     /**
      * delete a trigger
-     * @param name
+     * @param routeName
      */
     @ApiMethod(name = "delete", httpMethod = ApiMethod.HttpMethod.POST)
-    public void delete(final User user, @Named("regId") String name) {
-//        TimeRoute record = findRecord(userId, name);
-//        if(record == null) {
-//            log.info("Trigger " + userId + "with name " + name + " not registered, skipping unregister");
-//            return;
-//        }
-//        ofy().delete().entity(record).now();
+    public void delete(final User user, @Named("routeName") String routeName) {
+        List<TimeRoute> records = findRecord(user, routeName);
+        for (TimeRoute record : records) {
+            ofy().delete().entity(record).now();
+        }
     }
 
     /**
-     * Return a collection of registered devices
+     * Return a collection of triggers for a user
      *
      * @param count The number of devices to list
      * @return a list of time route configs for a user
      */
     @ApiMethod(name = "list")
-    public CollectionResponse<TimeRoute> listDevices(final User user, @Named("count") int count) {
+    public CollectionResponse<TimeRoute> listTriggers(final User user, @Named("count") int count) {
+        List<TimeRoute> records = findRecordsForUser(user);
+        return CollectionResponse.<TimeRoute>builder().setItems(records).build();
+    }
+
+    /**
+     * Return a collection of triggers for a user
+     *
+     * @param count The number of devices to list
+     * @return a list of time route configs for a user
+     */
+    @ApiMethod(name = "listall", path = "all")
+    public CollectionResponse<TimeRoute> listAllTriggers( @Named("count") int count) {
         List<TimeRoute> records = ofy().load().type(TimeRoute.class).limit(count).list();
         return CollectionResponse.<TimeRoute>builder().setItems(records).build();
     }
 
-//TODO is this right? How do we identify a timeroute from the user point of view? UserId and nameString
-    private TimeRoute findRecord(final User user,  String nameSTring) {
-//        return ofy().load().type(TimeRoute.class).filter("userId", userId).first().now();
-        return null;
+
+    /**
+     * Find a record for a specific user with a specific routeName
+     * @param user
+     * @param routeName
+     * @return
+     */
+    private List<TimeRoute> findRecord(final User user,  String routeName) {
+        Query<TimeRoute> query = ofy().load().type(TimeRoute.class);
+        query = query.filter("userId = ", user.getUserId());
+        query = query.filter("routeName = ", routeName);
+        return query.list();
+    }
+
+    /**
+     * Find all records for a user
+     * @param user
+     * @return
+     */
+    private List<TimeRoute> findRecordsForUser(final User user) {
+        Query<TimeRoute> query = ofy().load().type(TimeRoute.class);
+        query = query.filter("userId = ", user.getUserId());
+        return query.list();
     }
 
 }

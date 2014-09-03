@@ -4,6 +4,7 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
+import com.googlecode.objectify.Key;
 
 import net.ruggedodyssey.backend.domain.ScoreWord;
 
@@ -75,7 +76,10 @@ public class ScoreWordEndpoint {
     }
 
     private ScoreWord findRecord(String word) {
-        return ofy().load().type(ScoreWord.class).filter("word", word).first().now();
+//        return ofy().load().type(ScoreWord.class).filter("word", word).first().now();
+        ScoreWord scoreWord = ofy().load().key(Key.create(ScoreWord.class, word))
+                .now();
+        return scoreWord;
     }
 
 }

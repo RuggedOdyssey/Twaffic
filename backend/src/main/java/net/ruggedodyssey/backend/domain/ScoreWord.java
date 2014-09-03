@@ -11,14 +11,9 @@ import com.googlecode.objectify.annotation.Id;
 public class ScoreWord {
 
     /**
-     * Implicit key
+     * The word. We only want the word to appear once in the list so we can use it as a key.
      */
     @Id
-    Long id;
-
-    /**
-     * The word.
-     */
     String word;
 
     /** The score to weight the algorithm. Positive makes it more likely that

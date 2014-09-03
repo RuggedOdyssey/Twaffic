@@ -4,6 +4,8 @@ import com.google.appengine.repackaged.com.google.api.client.util.DateTime;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
+import net.ruggedodyssey.backend.form.TimeRouteConfigForm;
+
 /**
  * The Objectify object model for user route configuration
  * Created by maia on 2014/08/29.
@@ -53,4 +55,17 @@ public class TimeRoute {
      */
     String searchString;
 
+    public void setFieldsFromForm(String userId, TimeRouteConfigForm configForm) {
+        this.userId = userId;
+        this.routeName = configForm.getRouteName();
+        this.monday = configForm.getMonday();
+        this.tuesday = configForm.getTuesday();
+        this.wednesday = configForm.getWednesday();
+        this.thursday = configForm.getThursday();
+        this.friday = configForm.getFriday();
+        this.saturday = configForm.getSaturday();
+        this.sunday = configForm.getSunday();
+        this.starTime = configForm.getStarTime();
+        this.endTime = configForm.getEndTime();
+    }
 }

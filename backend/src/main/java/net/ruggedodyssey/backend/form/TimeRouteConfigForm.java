@@ -37,4 +37,48 @@ public class TimeRouteConfigForm {
      * Search string. It contains words, AND, OR and matching matching ()
      */
     String searchString;
+
+    public String getRouteName() {
+        return routeName;
+    }
+
+    public Boolean getMonday() {
+        return monday;
+    }
+
+    public Boolean getTuesday() {
+        return tuesday;
+    }
+
+    public Boolean getWednesday() {
+        return wednesday;
+    }
+
+    public Boolean getThursday() {
+        return thursday;
+    }
+
+    public Boolean getFriday() {
+        return friday;
+    }
+
+    public Boolean getSaturday() {
+        return saturday;
+    }
+
+    public Boolean getSunday() {
+        return sunday;
+    }
+
+    public DateTime getStarTime() {
+        return starTime;
+    }
+
+    public DateTime getEndTime() {
+        return endTime;
+    }
+
+    public String getSearchString() {
+        return searchString;
+    }
 }
