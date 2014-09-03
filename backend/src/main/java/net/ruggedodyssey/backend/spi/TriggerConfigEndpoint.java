@@ -4,6 +4,7 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
+import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.cmd.Query;
 
@@ -37,7 +38,11 @@ public class TriggerConfigEndpoint {
      *
      */
     @ApiMethod(name = "add", httpMethod = ApiMethod.HttpMethod.POST)
-    public void add(final User user, TimeRouteConfigForm configForm) {
+    public void add(final User user, TimeRouteConfigForm configForm)
+            throws UnauthorizedException {
+        if (user == null) {
+            throw new UnauthorizedException("Authorization required");
+        }
         TimeRoute record = findRecord(user, configForm.getRouteName()).get(0);
         if(record == null) {
             record = new TimeRoute();
@@ -51,7 +56,11 @@ public class TriggerConfigEndpoint {
      * @param routeName
      */
     @ApiMethod(name = "delete", httpMethod = ApiMethod.HttpMethod.POST)
-    public void delete(final User user, @Named("routeName") String routeName) {
+    public void delete(final User user, @Named("routeName") String routeName)
+            throws UnauthorizedException {
+        if (user == null) {
+            throw new UnauthorizedException("Authorization required");
+        }
         List<TimeRoute> records = findRecord(user, routeName);
         for (TimeRoute record : records) {
             ofy().delete().entity(record).now();
@@ -65,7 +74,11 @@ public class TriggerConfigEndpoint {
      * @return a list of time route configs for a user
      */
     @ApiMethod(name = "list")
-    public CollectionResponse<TimeRoute> listTriggers(final User user, @Named("count") int count) {
+    public CollectionResponse<TimeRoute> listTriggers(final User user, @Named("count") int count)
+            throws UnauthorizedException {
+        if (user == null) {
+            throw new UnauthorizedException("Authorization required");
+        }
         List<TimeRoute> records = findRecordsForUser(user);
         return CollectionResponse.<TimeRoute>builder().setItems(records).build();
     }
