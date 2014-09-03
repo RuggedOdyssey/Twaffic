@@ -7,18 +7,23 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static net.ruggedodyssey.backend.service.OfyService.ofy;
+
 public class TriggerConfigEndpointTest {
     private final LocalServiceTestHelper helper =
             new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig()
                     .setDefaultHighRepJobPolicyUnappliedJobPercentage(100));
+    TriggerConfigEndpoint triggerConfigEndpoint;
 
     @Before
     public void setUp() {
         helper.setUp();
+        triggerConfigEndpoint = new TriggerConfigEndpoint();
     }
 
     @After
     public void tearDown() {
+        ofy().clear();
         helper.tearDown();
     }
 

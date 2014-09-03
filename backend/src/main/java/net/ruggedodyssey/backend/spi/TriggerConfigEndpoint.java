@@ -6,6 +6,7 @@ import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.users.User;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 
 import net.ruggedodyssey.backend.domain.TimeRoute;
@@ -16,6 +17,7 @@ import java.util.logging.Logger;
 
 import javax.inject.Named;
 
+import static net.ruggedodyssey.backend.service.OfyService.factory;
 import static net.ruggedodyssey.backend.service.OfyService.ofy;
 
 /**
@@ -43,11 +45,8 @@ public class TriggerConfigEndpoint {
         if (user == null) {
             throw new UnauthorizedException("Authorization required");
         }
-        TimeRoute record = findRecord(user, configForm.getRouteName()).get(0);
-        if(record == null) {
-            record = new TimeRoute();
-        }
-        record.setFieldsFromForm(user.getUserId(), configForm);
+        final Key<TimeRoute> key = factory().allocateId(null, TimeRoute.class);
+        TimeRoute record = new TimeRoute(key.getId(), user.getUserId(), configForm);
         ofy().save().entity(record).now();
     }
 

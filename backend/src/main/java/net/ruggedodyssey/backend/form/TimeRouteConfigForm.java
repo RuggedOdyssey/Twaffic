@@ -1,6 +1,6 @@
 package net.ruggedodyssey.backend.form;
 
-import com.google.appengine.repackaged.com.google.api.client.util.DateTime;
+import java.util.Date;
 
 /**
  * POJO form to record TimeRoute Config
@@ -26,17 +26,39 @@ public class TimeRouteConfigForm {
     /**
      * Start time
      */
-    DateTime starTime;
+    Date starTime;
 
     /**
      * End time
      */
-    DateTime endTime;
+    Date endTime;
 
     /**
      * Search string. It contains words, AND, OR and matching matching ()
      */
     String searchString;
+
+    public TimeRouteConfigForm(String routeName,
+                               Date startTime,
+                               Date endTime,
+                               boolean monday,
+                               boolean tuesday,
+                               boolean wednesday,
+                               boolean thursday,
+                               boolean friday,
+                               boolean saturday,
+                               boolean sunday) {
+        this.routeName = routeName;
+        this.starTime = startTime == null ? null : new Date(startTime.getTime());
+        this.endTime = endTime == null ? null : new Date(endTime.getTime());
+        this.monday = monday;
+        this.tuesday = tuesday;
+        this.wednesday = wednesday;
+        this.thursday = thursday;
+        this.friday = friday;
+        this.saturday = saturday;
+        this.sunday = sunday;
+    }
 
     public String getRouteName() {
         return routeName;
@@ -70,11 +92,11 @@ public class TimeRouteConfigForm {
         return sunday;
     }
 
-    public DateTime getStarTime() {
+    public Date getStarTime() {
         return starTime;
     }
 
-    public DateTime getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 

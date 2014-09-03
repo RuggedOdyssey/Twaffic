@@ -1,10 +1,12 @@
 package net.ruggedodyssey.backend.domain;
 
-import com.google.appengine.repackaged.com.google.api.client.util.DateTime;
+import com.google.common.base.Preconditions;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
 import net.ruggedodyssey.backend.form.TimeRouteConfigForm;
+
+import java.util.Date;
 
 /**
  * The Objectify object model for user route configuration
@@ -43,20 +45,31 @@ public class TimeRoute {
     /**
      * Start time
      */
-    DateTime starTime;
+    Date starTime;
 
     /**
      * End time
      */
-    DateTime endTime;
+    Date endTime;
 
     /**
      * Search string. It contains words, AND, OR and matching matching ()
      */
     String searchString;
 
-    public void setFieldsFromForm(String userId, TimeRouteConfigForm configForm) {
+    /**
+     * Just making the default constructor private.
+     */
+//    private TimeRoute() {}
+    public TimeRoute(final long id, String userId, TimeRouteConfigForm configForm) {
         this.userId = userId;
+        Preconditions.checkNotNull(configForm.getRouteName(), "The name is required");
+        this.id = id;
+        this.userId = userId;
+        setFieldsFromForm(configForm);
+    }
+
+    public void setFieldsFromForm(TimeRouteConfigForm configForm) {
         this.routeName = configForm.getRouteName();
         this.monday = configForm.getMonday();
         this.tuesday = configForm.getTuesday();
@@ -67,5 +80,9 @@ public class TimeRoute {
         this.sunday = configForm.getSunday();
         this.starTime = configForm.getStarTime();
         this.endTime = configForm.getEndTime();
+        //TODO need to do some date and time conversion stuff
+
+//        Date startDate = configForm.getStarTime();
+//        this.starTime = startDate == null ? null : new Date(startDate.getTime());
     }
 }

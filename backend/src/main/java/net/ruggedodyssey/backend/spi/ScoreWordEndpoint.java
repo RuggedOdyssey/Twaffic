@@ -63,6 +63,16 @@ public class ScoreWordEndpoint {
     }
 
     /**
+     * Unregister a device from the backend
+     *
+     * @param word The Google Cloud Messaging registration Id to remove
+     */
+    @ApiMethod(name = "get")
+    public ScoreWord getWord(@Named("word") String word) {
+        return findRecord(word);
+    }
+
+    /**
      * Return a collection of registered devices
      *
      * @param count The number of devices to list

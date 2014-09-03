@@ -33,6 +33,11 @@ public class ScoreWord {
         this.score = score;
     }
 
+    /**
+     * Just making the default constructor private.
+     */
+    private ScoreWord() {}
+
     public String getWord() {
         return word;
     }
