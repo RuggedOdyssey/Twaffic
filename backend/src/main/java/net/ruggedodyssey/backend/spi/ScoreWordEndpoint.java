@@ -41,9 +41,8 @@ public class ScoreWordEndpoint {
     public void addWord(@Named("word") String word, @Named("score") Integer score) {
         ScoreWord record = findRecord(word);
         if(record == null) {
-            record = new ScoreWord();
+            record = new ScoreWord(word, score);
         }
-        record.setWord(word);
         record.setScore(score);
         ofy().save().entity(record).now();
     }

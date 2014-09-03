@@ -22,12 +22,19 @@ public class ScoreWord {
      */
     Integer score;
 
-    public String getWord() {
-        return word;
+
+    /**
+     * Constructor only for tests
+     * @param word
+     * @param score
+     */
+    public ScoreWord(String word, int score) {
+        this.word = word;
+        this.score = score;
     }
 
-    public void setWord(String word) {
-        this.word = word;
+    public String getWord() {
+        return word;
     }
 
     public Integer getScore() {
