@@ -80,9 +80,58 @@ public class TimeRoute {
         this.sunday = configForm.getSunday();
         this.starTime = configForm.getStarTime();
         this.endTime = configForm.getEndTime();
+        this.searchString = configForm.getSearchString();
         //TODO need to do some date and time conversion stuff
 
 //        Date startDate = configForm.getStarTime();
 //        this.starTime = startDate == null ? null : new Date(startDate.getTime());
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getRouteName() {
+        return routeName;
+    }
+
+    public Boolean getMonday() {
+        return monday;
+    }
+
+    public Boolean getTuesday() {
+        return tuesday;
+    }
+
+    public Boolean getWednesday() {
+        return wednesday;
+    }
+
+    public Boolean getThursday() {
+        return thursday;
+    }
+
+    public Boolean getFriday() {
+        return friday;
+    }
+
+    public Boolean getSaturday() {
+        return saturday;
+    }
+
+    public Boolean getSunday() {
+        return sunday;
+    }
+
+    public Date getStarTime() {
+        return starTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public String getSearchString() {
+        return searchString;
     }
 }

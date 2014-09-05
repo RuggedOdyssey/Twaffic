@@ -47,7 +47,8 @@ public class TimeRouteConfigForm {
                                boolean thursday,
                                boolean friday,
                                boolean saturday,
-                               boolean sunday) {
+                               boolean sunday,
+                               String searchString) {
         this.routeName = routeName;
         this.starTime = startTime == null ? null : new Date(startTime.getTime());
         this.endTime = endTime == null ? null : new Date(endTime.getTime());
@@ -58,6 +59,7 @@ public class TimeRouteConfigForm {
         this.friday = friday;
         this.saturday = saturday;
         this.sunday = sunday;
+        this.searchString = searchString;
     }
 
     public String getRouteName() {
