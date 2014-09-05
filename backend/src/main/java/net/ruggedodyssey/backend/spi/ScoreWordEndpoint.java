@@ -78,7 +78,7 @@ public class ScoreWordEndpoint {
      * @param count The number of devices to list
      * @return a list of Google Cloud Messaging registration Ids
      */
-    @ApiMethod(name = "listWords")
+    @ApiMethod(name = "listWords", path = "all")
     public CollectionResponse<ScoreWord> listWords(@Named("count") int count) {
         List<ScoreWord> records = ofy().load().type(ScoreWord.class).limit(count).list();
         return CollectionResponse.<ScoreWord>builder().setItems(records).build();
