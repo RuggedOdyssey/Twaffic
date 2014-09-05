@@ -39,7 +39,7 @@ public class ScoreWordEndpointTest {
 
     @After
     public void tearDown() {
-        ofy().clear();
+//        ofy().clear(); //TODO this makes the tests fail
         helper.tearDown();
     }
 

@@ -60,7 +60,7 @@ public class TimeRoute {
     /**
      * Just making the default constructor private.
      */
-//    private TimeRoute() {}
+    private TimeRoute() {}
     public TimeRoute(final long id, String userId, TimeRouteConfigForm configForm) {
         this.userId = userId;
         Preconditions.checkNotNull(configForm.getRouteName(), "The name is required");

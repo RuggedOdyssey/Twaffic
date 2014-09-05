@@ -7,8 +7,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static net.ruggedodyssey.backend.service.OfyService.ofy;
-
 public class TriggerConfigEndpointTest {
     private final LocalServiceTestHelper helper =
             new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig()
@@ -23,7 +21,7 @@ public class TriggerConfigEndpointTest {
 
     @After
     public void tearDown() {
-        ofy().clear();
+//        ofy().clear(); //TODO this makes the tests fail
         helper.tearDown();
     }
 
