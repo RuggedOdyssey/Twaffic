@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"  android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <PreferenceCategory
+        android:title="Authentication">
+        <Preference
+            android:key="PREF_GPLUS"
+            android:title="Google+ Sign-in"
+            android:summary="Sign in and out of Google+"/>
+    </PreferenceCategory>
+</PreferenceScreen>
