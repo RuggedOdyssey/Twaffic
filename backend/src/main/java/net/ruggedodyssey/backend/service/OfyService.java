@@ -5,6 +5,8 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 
 import net.ruggedodyssey.backend.domain.RegistrationRecord;
+import net.ruggedodyssey.backend.domain.ScoreWord;
+import net.ruggedodyssey.backend.domain.TimeRoute;
 
 /**
  * Objectify service wrapper so we can statically register our persistence classes
@@ -15,6 +17,8 @@ public class OfyService {
 
     static {
         ObjectifyService.register(RegistrationRecord.class);
+        ObjectifyService.register(TimeRoute.class);
+        ObjectifyService.register(ScoreWord.class);
     }
 
     public static Objectify ofy() {
