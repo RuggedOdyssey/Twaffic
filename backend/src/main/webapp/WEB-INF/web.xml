@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
-   <servlet>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
+    <servlet>
         <servlet-name>SystemServiceServlet</servlet-name>
         <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
         <init-param>
             <param-name>services</param-name>
             <param-value>net.ruggedodyssey.backend.spi.RegistrationEndpoint,
-                net.ruggedodyssey.backend.spi.MessagingEndpoint</param-value>
+                net.ruggedodyssey.backend.spi.MessagingEndpoint,net.ruggedodyssey.backend.spi.ScoreWordEndpoint,
+                net.ruggedodyssey.backend.spi.TriggerConfigEndpoint
+            </param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
@@ -31,6 +33,8 @@
             <web-resource-name>crons</web-resource-name>
             <url-pattern>/crons/check_feeds</url-pattern>
         </web-resource-collection>
-        <auth-constraint><role-name>admin</role-name></auth-constraint>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
     </security-constraint>
 </web-app>

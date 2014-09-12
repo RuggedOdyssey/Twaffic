@@ -26,22 +26,26 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 dependencies {
-  appengineSdk 'com.google.appengine:appengine-java-sdk:1.9.6'
-  compile 'com.google.appengine:appengine-endpoints:1.9.6'
-  compile 'com.google.appengine:appengine-endpoints-deps:1.9.6'
-  compile 'javax.servlet:servlet-api:2.5'
-  compile 'com.googlecode.objectify:objectify:4.0b3'
-  compile 'com.ganyo:gcm-server:1.0.2'
-  compile 'org.twitter4j:twitter4j-core:4.0.2'
+    appengineSdk 'com.google.appengine:appengine-java-sdk:1.9.6'
+    compile 'com.google.appengine:appengine-endpoints:1.9.6'
+    compile 'com.google.appengine:appengine-endpoints-deps:1.9.6'
+    compile 'javax.servlet:servlet-api:2.5'
+    compile 'com.googlecode.objectify:objectify:4.0b3'
+    compile 'com.ganyo:gcm-server:1.0.2'
+    compile 'org.twitter4j:twitter4j-core:4.0.2'
+
+    testCompile 'com.google.appengine:appengine-testing:1.9.6'
+    testCompile 'com.google.appengine:appengine-api-stubs:1.9.6'
+    testCompile 'junit:junit:4.11'
 }
 
 appengine {
-  downloadSdk = true
-  appcfg {
-    oauth2 = true
-  }
-  endpoints {
-    getClientLibsOnBuild = true
-    getDiscoveryDocsOnBuild = true
-  }
+    downloadSdk = true
+    appcfg {
+        oauth2 = true
+    }
+    endpoints {
+        getClientLibsOnBuild = true
+        getDiscoveryDocsOnBuild = true
+    }
 }
