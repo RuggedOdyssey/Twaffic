@@ -37,6 +37,7 @@ public class MainActivity extends Activity {
     GoogleCloudMessaging gcm;
     AtomicInteger msgId = new AtomicInteger();
     SharedPreferences prefs;
+    private static final int RESULT_SETTINGS = 1;
 
     String regid;
 
@@ -191,6 +192,8 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Intent i = new Intent(this, SettingsFragment.class);
+            startActivityForResult(i, RESULT_SETTINGS);
             return true;
         } else if (id == R.id.action_tweet) {
             new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "dummy"));
