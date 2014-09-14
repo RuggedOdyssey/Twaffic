@@ -17,11 +17,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
+ * TimeRoute Entity Test
  * Created by maia on 2014/09/03.
  */
 public class TimeRouteTest {
     private static final long ID = 123456L;
-    private static final String EMAIL = "example@gmail.com";
     private static final String USER_ID = "123456789";
     private static final String ROUTE_NAME = "test route";
     private static final String SEARCH_STRING = "N1 AND outbound";

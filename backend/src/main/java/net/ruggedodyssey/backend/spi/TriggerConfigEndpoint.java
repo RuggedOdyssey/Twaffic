@@ -9,6 +9,7 @@ import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 
+import net.ruggedodyssey.backend.domain.Profile;
 import net.ruggedodyssey.backend.domain.TimeRoute;
 import net.ruggedodyssey.backend.form.TimeRouteConfigForm;
 
@@ -39,13 +40,14 @@ public class TriggerConfigEndpoint {
      * Add a trigger to the backend
      *
      */
-    @ApiMethod(name = "add", httpMethod = ApiMethod.HttpMethod.POST)
-    public void add(final User user, TimeRouteConfigForm configForm)
+    @ApiMethod(name = "addTimeRoute", httpMethod = ApiMethod.HttpMethod.POST)
+    public void addTimeRoute(final User user, TimeRouteConfigForm configForm)
             throws UnauthorizedException {
         if (user == null) {
             throw new UnauthorizedException("Authorization required");
         }
-        final Key<TimeRoute> key = factory().allocateId(null, TimeRoute.class);
+        Key<Profile> profileKey = Key.create(Profile.class, user.getUserId());
+        final Key<TimeRoute> key = factory().allocateId(profileKey, TimeRoute.class);
         TimeRoute record = new TimeRoute(key.getId(), user.getUserId(), configForm);
         ofy().save().entity(record).now();
     }
@@ -54,8 +56,8 @@ public class TriggerConfigEndpoint {
      * delete a trigger
      * @param routeName
      */
-    @ApiMethod(name = "delete", httpMethod = ApiMethod.HttpMethod.POST)
-    public void delete(final User user, @Named("routeName") String routeName)
+    @ApiMethod(name = "deleteTimeRoute", httpMethod = ApiMethod.HttpMethod.POST)
+    public void deleteTimeRoute(final User user, @Named("routeName") String routeName)
             throws UnauthorizedException {
         if (user == null) {
             throw new UnauthorizedException("Authorization required");
@@ -67,13 +69,24 @@ public class TriggerConfigEndpoint {
     }
 
     /**
+     * Get a trigger with a specific routeName for a user
+     *
+     * @param routeName The Google Cloud Messaging registration Id to remove
+     * @return a list of time route configs with  spcific name for a user
+     */
+    @ApiMethod(name = "getTimeRoute")
+    public List<TimeRoute> getTimeRoute(final User user, @Named("routeName") String routeName) {
+       return findRecord(user, routeName);
+    }
+
+    /**
      * Return a collection of triggers for a user
      *
      * @param count The number of devices to list
      * @return a list of time route configs for a user
      */
-    @ApiMethod(name = "list")
-    public CollectionResponse<TimeRoute> listTriggers(final User user, @Named("count") int count)
+    @ApiMethod(name = "listTimeRoutes")
+    public CollectionResponse<TimeRoute> listTimeRoutes(final User user, @Named("count") int count)
             throws UnauthorizedException {
         if (user == null) {
             throw new UnauthorizedException("Authorization required");
@@ -88,8 +101,8 @@ public class TriggerConfigEndpoint {
      * @param count The number of devices to list
      * @return a list of time route configs for a user
      */
-    @ApiMethod(name = "listall", path = "all")
-    public CollectionResponse<TimeRoute> listAllTriggers( @Named("count") int count) {
+    @ApiMethod(name = "listAllTimeRoutes")
+    public CollectionResponse<TimeRoute> listAllTimeRoutes( @Named("count") int count) {
         List<TimeRoute> records = ofy().load().type(TimeRoute.class).limit(count).list();
         return CollectionResponse.<TimeRoute>builder().setItems(records).build();
     }

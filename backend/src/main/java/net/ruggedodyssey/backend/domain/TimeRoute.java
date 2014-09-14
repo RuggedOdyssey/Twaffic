@@ -1,8 +1,13 @@
 package net.ruggedodyssey.backend.domain;
 
+import com.google.api.server.spi.config.AnnotationBoolean;
+import com.google.api.server.spi.config.ApiResourceProperty;
 import com.google.common.base.Preconditions;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Parent;
 
 import net.ruggedodyssey.backend.form.TimeRouteConfigForm;
 
@@ -22,13 +27,22 @@ public class TimeRoute {
     Long id;
 
     /**
-     * The user that uses this TimeRoute
+     * Holds Profile key as the parent.
      */
-    String userId;
+    @Parent
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    private Key<Profile> profileKey;
+
+    /**
+     * The userId of the owner of this trigger.
+     */
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    private String userId;
 
     /**
      * The name the user gives to this TimeRoute
      */
+    @Index
     String routeName;
 
     /**
@@ -62,9 +76,9 @@ public class TimeRoute {
      */
     private TimeRoute() {}
     public TimeRoute(final long id, String userId, TimeRouteConfigForm configForm) {
-        this.userId = userId;
         Preconditions.checkNotNull(configForm.getRouteName(), "The name is required");
         this.id = id;
+        this.profileKey = Key.create(Profile.class, userId);
         this.userId = userId;
         setFieldsFromForm(configForm);
     }
@@ -85,10 +99,6 @@ public class TimeRoute {
 
 //        Date startDate = configForm.getStarTime();
 //        this.starTime = startDate == null ? null : new Date(startDate.getTime());
-    }
-
-    public String getUserId() {
-        return userId;
     }
 
     public String getRouteName() {
@@ -133,5 +143,20 @@ public class TimeRoute {
 
     public String getSearchString() {
         return searchString;
+    }
+
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public Key<Profile> getProfileKey() {
+        return profileKey;
+    }
+
+    // Get a String version of the key
+    public String getWebsafeKey() {
+        return Key.create(profileKey, TimeRoute.class, id).getString();
+    }
+
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public String getUserId() {
+        return userId;
     }
 }
