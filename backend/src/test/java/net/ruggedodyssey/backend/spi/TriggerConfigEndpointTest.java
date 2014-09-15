@@ -55,7 +55,7 @@ public class TriggerConfigEndpointTest {
 
     @After
     public void tearDown() {
-//        ofy().clear(); //TODO this makes the tests fail
+        ofy().clear();
         helper.tearDown();
     }
 
