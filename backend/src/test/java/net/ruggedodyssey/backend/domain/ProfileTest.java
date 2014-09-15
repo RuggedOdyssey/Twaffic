@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ProfileTest {
@@ -30,7 +31,7 @@ public class ProfileTest {
 
     @After
     public void tearDown() throws Exception {
-
+        helper.tearDown();
     }
 
     @Test
@@ -45,5 +46,8 @@ public class ProfileTest {
     public void testUpdate() throws Exception {
         profile.update(DISPLAYNAME2);
         assertTrue(DISPLAYNAME2.equals(profile.getDisplayName()));
+        assertFalse(profile.muted);
+        profile.setMute(true);
+        assertTrue(profile.muted);
     }
 }

@@ -9,6 +9,7 @@ import com.googlecode.objectify.annotation.Id;
 public class Profile {
     String displayName;
     String mainEmail;
+    boolean muted = false;
 
     @Id
     String userId;
@@ -44,7 +45,7 @@ public class Profile {
     private Profile() {}
     
     /**
-     * Update the Profile with the given displayName and teeShirtSize
+     * Update the Profile with the given displayName
      *
      * @param displayName
      */
@@ -54,4 +55,15 @@ public class Profile {
         }
     }
 
+    /**
+     * Mute all triggers for this profile
+     * @param mute
+     */
+    public void setMute(boolean mute) {
+        this.muted = mute;
+    }
+
+    public boolean isMuted() {
+        return muted;
+    }
 }
