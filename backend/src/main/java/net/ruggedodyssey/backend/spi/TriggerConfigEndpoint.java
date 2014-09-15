@@ -141,7 +141,7 @@ public class TriggerConfigEndpoint {
      *
      */
     @ApiMethod(name = "addTimeRoute", httpMethod = ApiMethod.HttpMethod.POST)
-    public void addTimeRoute(final User user, TimeRouteConfigForm configForm)
+    public TimeRoute addTimeRoute(final User user, TimeRouteConfigForm configForm)
             throws UnauthorizedException {
         if (user == null) {
             throw new UnauthorizedException("Authorization required");
@@ -150,6 +150,7 @@ public class TriggerConfigEndpoint {
         final Key<TimeRoute> key = factory().allocateId(profileKey, TimeRoute.class);
         TimeRoute record = new TimeRoute(key.getId(), user.getUserId(), configForm);
         ofy().save().entity(record).now();
+        return record;
     }
 
     /**

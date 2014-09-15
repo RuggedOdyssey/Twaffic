@@ -6,6 +6,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.Key;
 
 import net.ruggedodyssey.backend.domain.Profile;
+import net.ruggedodyssey.backend.domain.TimeRoute;
 import net.ruggedodyssey.backend.form.ProfileForm;
 import net.ruggedodyssey.backend.form.TimeRouteConfigForm;
 
@@ -18,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
 import static net.ruggedodyssey.backend.service.OfyService.ofy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -159,18 +161,16 @@ public class TriggerConfigEndpointTest {
     public void testAdd() throws Exception {
         Profile profile = new Profile(USER_ID, DISPLAY_NAME, EMAIL);
         ofy().save().entity(profile).now();
-        triggerConfigEndpoint.addTimeRoute(user, form);
-//        List<TimeRoute> triggers = triggerConfigEndpoint.getTimeRoute(user, ROUTE_NAME);
-//        assertEquals("Add TimeRoute failed", 1, triggers.size());
-//        TimeRoute r = triggers.get(0);
-//        assertTrue(r.getMonday());
-//        assertTrue(r.getTuesday());
-//        assertTrue(r.getWednesday());
-//        assertTrue(r.getThursday());
-//        assertTrue(r.getFriday());
-//        assertTrue(r.getSaturday());
-//        assertTrue(r.getSunday());
-//        assertTrue(ROUTE_NAME.equalsIgnoreCase(r.getRouteName()));
+        TimeRoute r = triggerConfigEndpoint.addTimeRoute(user, form);
+        assertNotNull(r);
+        assertTrue(r.getMonday());
+        assertTrue(r.getTuesday());
+        assertTrue(r.getWednesday());
+        assertTrue(r.getThursday());
+        assertTrue(r.getFriday());
+        assertFalse(r.getSaturday());
+        assertFalse(r.getSunday());
+        assertTrue(ROUTE_NAME.equalsIgnoreCase(r.getRouteName()));
     }
 
     @Test
