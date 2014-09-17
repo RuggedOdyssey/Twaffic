@@ -1,5 +1,7 @@
 package net.ruggedodyssey.backend.spi;
 
+import com.google.api.server.spi.response.CollectionResponse;
+import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.users.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -16,6 +18,7 @@ import org.junit.Test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
 import static junit.framework.Assert.assertFalse;
@@ -32,6 +35,7 @@ public class TriggerConfigEndpointTest {
     private static final String USER_ID = "123456789";
     private static final String DISPLAY_NAME = "example";
     private static final String ROUTE_NAME = "test route";
+    private static final String ROUTE_NAME2 = "test route2";
     private static final String SEARCH_STRING = "N1 AND outbound";
 
     private final LocalServiceTestHelper helper =
@@ -42,6 +46,7 @@ public class TriggerConfigEndpointTest {
     private Date endTime;
 
     private TimeRouteConfigForm form;
+    private TimeRouteConfigForm form2;
     private User user;
 
     @Before
@@ -53,6 +58,7 @@ public class TriggerConfigEndpointTest {
         startTime = dateFormat.parse("14:00:00");
         endTime = dateFormat.parse("16:00:00");
         form = new TimeRouteConfigForm(ROUTE_NAME, startTime, endTime, true, true, true, true, true, false, false, SEARCH_STRING);
+        form2 = new TimeRouteConfigForm(ROUTE_NAME2, startTime, endTime, true, true, true, true, true, false, false, SEARCH_STRING);
     }
 
     @After
@@ -158,7 +164,7 @@ public class TriggerConfigEndpointTest {
 
 
     @Test
-    public void testAdd() throws Exception {
+    public void testAddTimeRoute() throws Exception {
         Profile profile = new Profile(USER_ID, DISPLAY_NAME, EMAIL);
         ofy().save().entity(profile).now();
         TimeRoute r = triggerConfigEndpoint.addTimeRoute(user, form);
@@ -173,18 +179,57 @@ public class TriggerConfigEndpointTest {
         assertTrue(ROUTE_NAME.equalsIgnoreCase(r.getRouteName()));
     }
 
-    @Test
-    public void testDelete() throws Exception {
-
+    @Test(expected = NotFoundException.class)
+    public void testDeleteTimeRoute() throws Exception {
+        Profile profile = new Profile(USER_ID, DISPLAY_NAME, EMAIL);
+        ofy().save().entity(profile).now();
+        TimeRoute r = triggerConfigEndpoint.addTimeRoute(user, form);
+        assertNotNull(r);
+        triggerConfigEndpoint.deleteTimeRoute(user, r.getWebsafeKey());
+        triggerConfigEndpoint.getTimeRoute(user, r.getWebsafeKey());
     }
 
     @Test
-    public void testListTriggers() throws Exception {
-
+    public void testGetTimeRoute() throws Exception {
+        Profile profile = new Profile(USER_ID, DISPLAY_NAME, EMAIL);
+        ofy().save().entity(profile).now();
+        TimeRoute r = triggerConfigEndpoint.addTimeRoute(user, form);
+        TimeRoute res = triggerConfigEndpoint.getTimeRoute(user, r.getWebsafeKey());
+        assertNotNull(res);
+        assertTrue(r.getRouteName().equals(res.getRouteName()));
     }
 
-    @Test
-    public void testListAllTriggers() throws Exception {
+
+    //@Test
+    public void testListTimeRoutes() throws Exception {
+        Profile profile = new Profile(USER_ID, DISPLAY_NAME, EMAIL);
+        ofy().save().entity(profile).now();
+        TimeRoute r = triggerConfigEndpoint.addTimeRoute(user, form);
+        TimeRoute r2 = triggerConfigEndpoint.addTimeRoute(user, form2);
+
+        CollectionResponse<TimeRoute> timeRoutesRes = triggerConfigEndpoint.listTimeRoutes(user);
+        Collection<TimeRoute> timeRoutes = timeRoutesRes.getItems();
+        assertEquals(2, timeRoutes.size());
+        assertTrue("The result should contain a time route with name " + ROUTE_NAME,
+                timeRoutes.contains(r));
+        assertTrue("The result should contain a time route with name " + ROUTE_NAME2,
+                timeRoutes.contains(r2));
+    }
+
+    //@Test
+    public void testListAllTimeRoutes() throws Exception {
+        Profile profile = new Profile(USER_ID, DISPLAY_NAME, EMAIL);
+        ofy().save().entity(profile).now();
+        TimeRoute r = triggerConfigEndpoint.addTimeRoute(user, form);
+        TimeRoute r2 = triggerConfigEndpoint.addTimeRoute(user, form2);
+
+        CollectionResponse<TimeRoute> timeRoutesRes = triggerConfigEndpoint.listAllTimeRoutes(10);
+        Collection<TimeRoute> timeRoutes = timeRoutesRes.getItems();
+        assertEquals(2, timeRoutes.size());
+        assertTrue("The result should contain a time route with name " + ROUTE_NAME,
+                timeRoutes.contains(r));
+        assertTrue("The result should contain a time route with name " + ROUTE_NAME2,
+                timeRoutes.contains(r2));
 
     }
 }

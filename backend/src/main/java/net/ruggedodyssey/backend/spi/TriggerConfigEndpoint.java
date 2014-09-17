@@ -155,18 +155,21 @@ public class TriggerConfigEndpoint {
 
     /**
      * delete a trigger
-     * @param routeName
+     * @param webSafeRouteKey
      */
-    @ApiMethod(name = "deleteTimeRoute", httpMethod = ApiMethod.HttpMethod.DELETE)
-    public void deleteTimeRoute(final User user, @Named("routeName") String routeName)
+    @ApiMethod(name = "deleteTimeRoute",
+            path = "timeRoute/{webSafeRouteKey}/delete", httpMethod = ApiMethod.HttpMethod.DELETE)
+    public void deleteTimeRoute(final User user, @Named("webSafeRouteKey") String webSafeRouteKey)
             throws UnauthorizedException {
         if (user == null) {
             throw new UnauthorizedException("Authorization required");
         }
-        List<TimeRoute> records = findRecord(user, routeName);
-        for (TimeRoute record : records) {
-            ofy().delete().entity(record).now();
-        }
+        Key<TimeRoute> timeRouteKey = Key.create(webSafeRouteKey);
+        ofy().delete().key(timeRouteKey).now();
+//        List<TimeRoute> records = findRecord(user, routeName);
+//        for (TimeRoute record : records) {
+//            ofy().delete().entity(record).now();
+//        }
     }
 
     /**
@@ -176,7 +179,7 @@ public class TriggerConfigEndpoint {
      * @return a list of time route configs with  spcific name for a user
      */
     @ApiMethod(name = "getTimeRoute",
-            path = "conference/{webSafeRouteKey}",
+            path = "timeRoute/{webSafeRouteKey}",
             httpMethod = ApiMethod.HttpMethod.POST)
     public TimeRoute getTimeRoute(final User user, @Named("webSafeRouteKey") String webSafeRouteKey) throws NotFoundException {
         Key<TimeRoute> timeRouteKey = Key.create(webSafeRouteKey);
