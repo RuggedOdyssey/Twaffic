@@ -177,6 +177,8 @@ public class TriggerConfigEndpointTest {
         assertFalse(r.getSaturday());
         assertFalse(r.getSunday());
         assertTrue(ROUTE_NAME.equalsIgnoreCase(r.getRouteName()));
+        TimeRoute  r2 = triggerConfigEndpoint.getTimeRoute(user, r.getWebsafeKey());
+        assertNotNull(r2);
     }
 
     @Test(expected = NotFoundException.class)
@@ -185,6 +187,8 @@ public class TriggerConfigEndpointTest {
         ofy().save().entity(profile).now();
         TimeRoute r = triggerConfigEndpoint.addTimeRoute(user, form);
         assertNotNull(r);
+        TimeRoute  r2 = triggerConfigEndpoint.getTimeRoute(user, r.getWebsafeKey());
+        assertNotNull(r2);
         triggerConfigEndpoint.deleteTimeRoute(user, r.getWebsafeKey());
         triggerConfigEndpoint.getTimeRoute(user, r.getWebsafeKey());
     }
@@ -200,7 +204,7 @@ public class TriggerConfigEndpointTest {
     }
 
 
-    //@Test
+    @Test
     public void testListTimeRoutes() throws Exception {
         Profile profile = new Profile(USER_ID, DISPLAY_NAME, EMAIL);
         ofy().save().entity(profile).now();
@@ -222,6 +226,7 @@ public class TriggerConfigEndpointTest {
         ofy().save().entity(profile).now();
         TimeRoute r = triggerConfigEndpoint.addTimeRoute(user, form);
         TimeRoute r2 = triggerConfigEndpoint.addTimeRoute(user, form2);
+        //TODO this works in the api but not in the test
 
         CollectionResponse<TimeRoute> timeRoutesRes = triggerConfigEndpoint.listAllTimeRoutes(10);
         Collection<TimeRoute> timeRoutes = timeRoutesRes.getItems();

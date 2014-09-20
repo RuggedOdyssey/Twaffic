@@ -202,7 +202,10 @@ public class TriggerConfigEndpoint {
         if (user == null) {
             throw new UnauthorizedException("Authorization required");
         }
-        List<TimeRoute> records = findRecordsForUser(user);
+        // Get the key for the User's Profile.order("name")
+        Key userKey = Key.create(Profile.class, user.getUserId());
+        Query query = ofy().load().type(TimeRoute.class).ancestor(userKey);
+        List<TimeRoute> records = query.list();
         return CollectionResponse.<TimeRoute>builder().setItems(records).build();
     }
 
@@ -216,31 +219,6 @@ public class TriggerConfigEndpoint {
     public CollectionResponse<TimeRoute> listAllTimeRoutes( @Named("count") int count) {
         List<TimeRoute> records = ofy().load().type(TimeRoute.class).limit(count).list();
         return CollectionResponse.<TimeRoute>builder().setItems(records).build();
-    }
-
-
-    /**
-     * Find a record for a specific user with a specific routeName
-     * @param user
-     * @param routeName
-     * @return
-     */
-    private List<TimeRoute> findRecord(final User user,  String routeName) {
-        Query<TimeRoute> query = ofy().load().type(TimeRoute.class);
-        query = query.filter("userId = ", user.getUserId());
-        query = query.filter("routeName = ", routeName);
-        return query.list();
-    }
-
-    /**
-     * Find all records for a user
-     * @param user
-     * @return
-     */
-    private List<TimeRoute> findRecordsForUser(final User user) {
-        Query<TimeRoute> query = ofy().load().type(TimeRoute.class);
-        query = query.filter("userId = ", user.getUserId());
-        return query.list();
     }
 
 }
