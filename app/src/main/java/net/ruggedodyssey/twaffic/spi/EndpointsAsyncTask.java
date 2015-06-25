@@ -8,6 +8,7 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
 import net.ruggedodyssey.backend.messaging.Messaging;
+import net.ruggedodyssey.backend.trigger.Trigger;
 
 import java.io.IOException;
 
@@ -16,6 +17,7 @@ import java.io.IOException;
  */
 public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
     private Messaging myApiService;
+    private Trigger myTriggerService;
     private Context context;
 
     public EndpointsAsyncTask() {

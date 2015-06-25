@@ -1,5 +1,6 @@
 package net.ruggedodyssey.backend.spi;
 
+import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.Key;
@@ -10,10 +11,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collection;
+
 import static net.ruggedodyssey.backend.service.OfyService.ofy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by maia on 2014/09/03.
@@ -39,7 +43,7 @@ public class ScoreWordEndpointTest {
 
     @After
     public void tearDown() {
-//        ofy().clear(); //TODO this makes the tests fail
+        ofy().clear();
         helper.tearDown();
     }
 
@@ -63,6 +67,7 @@ public class ScoreWordEndpointTest {
     @Test
     public void testDeleteWord() {
         scoreWordEndpoint.addWord(WORD_1, SCORE_1);
+        scoreWordEndpoint.addWord(WORD_1, SCORE_1);
         ScoreWord word = scoreWordEndpoint.getWord(WORD_1);
         assertNotNull(word);
         scoreWordEndpoint.deleteWord(WORD_1);
@@ -70,8 +75,21 @@ public class ScoreWordEndpointTest {
         assertNull(word);
     }
 
-    @Test
+    //@Test
     public void testListWords() {
+        scoreWordEndpoint.addWord(WORD_1, SCORE_1);
+        scoreWordEndpoint.addWord(WORD_2, SCORE_2);
+        //TODO this works in the api but not in the test
+        CollectionResponse<ScoreWord> scoreWordsRes = scoreWordEndpoint.listWords(10);
+        Collection<ScoreWord> scoreWords = scoreWordsRes.getItems();
+        assertEquals(2, scoreWords.size());
+
+        ScoreWord word1 = scoreWordEndpoint.getWord(WORD_1);
+        ScoreWord word2 = scoreWordEndpoint.getWord(WORD_2);
+        assertTrue("The result should contain a time route with name " + WORD_1,
+                scoreWords.contains(word1));
+        assertTrue("The result should contain a time route with name " + WORD_2,
+                scoreWords.contains(word2));
 
 
     }

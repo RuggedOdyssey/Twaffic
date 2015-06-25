@@ -38,6 +38,9 @@ public class TimeRouteConfigForm {
      */
     String searchString;
 
+    private TimeRouteConfigForm() {
+    }
+
     public TimeRouteConfigForm(String routeName,
                                Date startTime,
                                Date endTime,
